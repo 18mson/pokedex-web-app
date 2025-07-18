@@ -1,23 +1,16 @@
-import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { apolloClient } from '@/lib/apollo';
 import { GET_POKEMON_DETAIL, GET_POKEMON_LIST } from '@/lib/graphql/queries';
 import { PokemonDetail } from './PokemonDetail';
 import { formatPokemonName } from '@/lib/utils/pokemon';
 
-type PageProps = {
-  params: {
-    id: string;
-  };
-};
-
 export async function generateStaticParams() {
   try {
     const { data } = await apolloClient.query({
       query: GET_POKEMON_LIST,
-      variables: { 
+      variables: {
         limit: 1000,
-        offset: 0 
+        offset: 0,
       },
     });
 
@@ -32,11 +25,13 @@ export async function generateStaticParams() {
   }
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const id = parseInt(params.id);
-
-  if (isNaN(id)) {
-    return { title: 'Pokemon Not Found' };
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const numericId = parseInt(id);
+  if (isNaN(numericId)) {
+    return {
+      title: 'Pokemon Not Found',
+    };
   }
 
   try {
@@ -47,12 +42,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     const pokemon = data.pokemon_v2_pokemon_by_pk;
     if (!pokemon) {
-      return { title: 'Pokemon Not Found' };
+      return {
+        title: 'Pokemon Not Found',
+      };
     }
 
     return {
       title: `${formatPokemonName(pokemon.name)} - Pokédex`,
-      description: `Details of ${formatPokemonName(pokemon.name)}, including stats, types, and more.`,
+      description: `Detailed information about ${formatPokemonName(pokemon.name)}, including stats, types, abilities, and evolution chain.`,
       openGraph: {
         title: `${formatPokemonName(pokemon.name)} - Pokédex`,
         description: `Discover everything about ${formatPokemonName(pokemon.name)}`,
@@ -60,16 +57,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       },
     };
   } catch {
-    return { title: 'Pokemon Not Found' };
+    return {
+      title: 'Pokemon Not Found',
+    };
   }
 }
 
-export default async function PokemonDetailPage({ params }: PageProps) {
-  const id = parseInt(params.id);
-  
-  if (isNaN(id)) {
-    notFound();
-  }
+export default async function PokemonDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const numericId = parseInt(id);
+  if (isNaN(numericId)) notFound();
 
   try {
     const { data } = await apolloClient.query({
@@ -78,13 +75,10 @@ export default async function PokemonDetailPage({ params }: PageProps) {
     });
 
     const pokemon = data.pokemon_v2_pokemon_by_pk;
-    if (!pokemon) {
-      notFound();
-    }
+    if (!pokemon) notFound();
 
     return <PokemonDetail pokemon={pokemon} />;
-  } catch (error) {
-    console.error('Error fetching Pokémon:', error);
+  } catch {
     notFound();
   }
 }
