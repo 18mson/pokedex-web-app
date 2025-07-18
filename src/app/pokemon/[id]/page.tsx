@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { apolloClient } from '@/lib/apollo';
 import { GET_POKEMON_DETAIL, GET_POKEMON_LIST } from '@/lib/graphql/queries';
-import { PokemonDetailClient } from './PokemonDetail';
+import { PokemonDetail } from './PokemonDetail';
 import { formatPokemonName } from '@/lib/utils/pokemon';
 
 interface Props {
@@ -28,7 +28,6 @@ export async function generateStaticParams() {
     }));
   } catch (error) {
     console.error('Error generating static params:', error);
-    // Return a fallback set of common Pokemon IDs
     return Array.from({ length: 151 }, (_, i) => ({
       id: (i + 1).toString(),
     }));
@@ -91,7 +90,7 @@ export default async function PokemonDetailPage({ params }: Props) {
       notFound();
     }
 
-    return <PokemonDetailClient pokemon={pokemon} />;
+    return <PokemonDetail pokemon={pokemon} />;
   } catch {
     notFound();
   }

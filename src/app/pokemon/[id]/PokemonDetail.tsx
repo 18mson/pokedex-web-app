@@ -43,7 +43,7 @@ interface PokemonDetailProps {
   pokemon: Pokemon;
 }
 
-export function PokemonDetailClient({ pokemon }: PokemonDetailProps) {
+export function PokemonDetail({ pokemon }: PokemonDetailProps) {
   const {
     favorites,
     toggleFavorite,
