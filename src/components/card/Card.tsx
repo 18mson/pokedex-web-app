@@ -50,13 +50,11 @@ export function PokemonCard({ pokemon, className }: PokemonCardProps) {
         className={cn(
           'group relative bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer border border-gray-200 dark:border-gray-700',
           'hover:scale-105 hover:-translate-y-1',
-          className
         )}
         style={{
           background: `linear-gradient(135deg, ${typeColor}20 0%, transparent 50%)`,
         }}
       >
-        {/* Favorite Button */}
         <button
           onClick={handleToggleFavorite}
           className={cn(
@@ -69,7 +67,6 @@ export function PokemonCard({ pokemon, className }: PokemonCardProps) {
           <Heart className={cn('w-4 h-4', isFavorite && 'fill-current')} />
         </button>
 
-        {/* Comparison Button */}
         <button
           onClick={handleToggleComparison}
           disabled={!isInComparison && !canAddToComparison}
@@ -88,60 +85,57 @@ export function PokemonCard({ pokemon, className }: PokemonCardProps) {
           )}
         </button>
 
-        {/* Pokemon Number */}
         <div className="absolute top-3 left-1/2 transform -translate-x-1/2 z-10">
           <span className="text-xs font-mono text-gray-500 dark:text-gray-400 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm px-2 py-1 rounded-full">
             #{pokemon.id.toString().padStart(3, '0')}
           </span>
         </div>
-
-        {/* Pokemon Image */}
-        <div className="relative h-48 flex items-center justify-center p-4">
-          <Image
-            src={getPokemonImageUrl(pokemon.id)}
-            alt={formatPokemonName(pokemon.name)}
-            width={120}
-            height={120}
-            className="object-contain group-hover:scale-110 transition-transform duration-300"
-            loading="lazy"
-          />
-        </div>
-
-        {/* Pokemon Info */}
-        <div className="p-4 pt-0">
-          <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-2">
-            {formatPokemonName(pokemon.name)}
-          </h3>
-
-          {/* Types */}
-          <div className="flex gap-1 mb-3">
-            {pokemon.pokemon_v2_pokemontypes.map((typeInfo) => (
-              <span
-                key={typeInfo.pokemon_v2_type.name}
-                className="px-2 py-1 rounded-full text-xs font-medium text-white"
-                style={{ backgroundColor: getTypeColor(typeInfo.pokemon_v2_type.name) }}
-              >
-                {formatPokemonName(typeInfo.pokemon_v2_type.name)}
-              </span>
-            ))}
+        <div className={className}>
+          <div className="relative h-48 flex items-center justify-center p-4">
+            <Image
+              src={getPokemonImageUrl(pokemon.id)}
+              alt={formatPokemonName(pokemon.name)}
+              width={120}
+              height={120}
+              className="object-contain group-hover:scale-110 transition-transform duration-300"
+              loading="lazy"
+            />
           </div>
 
-          {/* Quick Stats */}
-          <div className="space-y-1">
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600 dark:text-gray-400">Height:</span>
-              <span className="font-medium text-gray-900 dark:text-white">
-                {(pokemon.height / 10).toFixed(1)}m
-              </span>
+          <div className="p-4 pt-0 flex-1/2">
+            <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-2">
+              {formatPokemonName(pokemon.name)}
+            </h3>
+
+            <div className="flex gap-1 mb-3">
+              {pokemon.pokemon_v2_pokemontypes.map((typeInfo) => (
+                <span
+                  key={typeInfo.pokemon_v2_type.name}
+                  className="px-2 py-1 rounded-full text-xs font-medium text-white"
+                  style={{ backgroundColor: getTypeColor(typeInfo.pokemon_v2_type.name) }}
+                >
+                  {formatPokemonName(typeInfo.pokemon_v2_type.name)}
+                </span>
+              ))}
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600 dark:text-gray-400">Weight:</span>
-              <span className="font-medium text-gray-900 dark:text-white">
-                {(pokemon.weight / 10).toFixed(1)}kg
-              </span>
+
+            <div className="space-y-1">
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600 dark:text-gray-400">Height:</span>
+                <span className="font-medium text-gray-900 dark:text-white">
+                  {(pokemon.height / 10).toFixed(1)}m
+                </span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600 dark:text-gray-400">Weight:</span>
+                <span className="font-medium text-gray-900 dark:text-white">
+                  {(pokemon.weight / 10).toFixed(1)}kg
+                </span>
+              </div>
             </div>
           </div>
         </div>
+
       </div>
     </Link>
   );

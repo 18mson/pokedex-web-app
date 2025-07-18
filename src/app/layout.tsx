@@ -1,11 +1,8 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import { ApolloProviderWrapper } from '@/components/providers/ApolloProvider';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
 import { Header } from '@/components/layout/Header';
-
-const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Pokédex - Discover and Explore Pokemon',
@@ -26,7 +23,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning data-theme="dark">
-      <body className={inter.className}>
+      <body>
         <ApolloProviderWrapper>
           <ThemeProvider>
             <div className="min-h-screen bg-gray-50 dark:bg-gray-900">

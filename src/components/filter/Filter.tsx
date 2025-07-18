@@ -29,6 +29,7 @@ export function FilterPanel() {
     } else {
       setSelectedTypes([...selectedTypes, typeName]);
     }
+    setIsOpen(false);
   };
 
   const generations = [
@@ -46,11 +47,10 @@ export function FilterPanel() {
 
   return (
     <div className="relative">
-      {/* Mobile Filter Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          'lg:hidden flex items-center gap-2 px-4 py-2 rounded-lg border',
+          'lg:hidden flex items-center gap-2 px-4 py-2 rounded-lg border h-[50px]',
           'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600',
           'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700',
           'transition-colors duration-200',
@@ -58,24 +58,22 @@ export function FilterPanel() {
         )}
       >
         <Filter className="w-4 h-4" />
-        <span>Filters</span>
         {hasActiveFilters && (
           <span className="bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
             {selectedTypes.length + (selectedGeneration ? 1 : 0)}
           </span>
         )}
       </button>
-
-      {/* Filter Panel */}
       <div
         className={cn(
           'absolute lg:relative top-full lg:top-auto left-0 right-0 z-20',
+          'w-[calc(100vw-2em)] lg:w-fit',
+          'max-h-[calc(100vh-150px)] lg:h-auto',
           'bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg lg:shadow-none',
-          'p-4 space-y-6 mt-2 lg:mt-0',
+          'p-4 space-y-6 mt-2 lg:mt-0 overflow-y-auto',
           isOpen ? 'block' : 'hidden lg:block'
         )}
       >
-        {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <SlidersHorizontal className="w-5 h-5 text-gray-600 dark:text-gray-400" />
@@ -91,7 +89,6 @@ export function FilterPanel() {
           )}
         </div>
 
-        {/* Types Filter */}
         <div>
           <h4 className="font-medium text-gray-900 dark:text-white mb-3">Types</h4>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -116,12 +113,14 @@ export function FilterPanel() {
           </div>
         </div>
 
-        {/* Generation Filter */}
         <div>
           <h4 className="font-medium text-gray-900 dark:text-white mb-3">Generation</h4>
           <select
             value={selectedGeneration || ''}
-            onChange={(e) => setSelectedGeneration(e.target.value ? parseInt(e.target.value) : null)}
+            onChange={(e) => {
+              setSelectedGeneration(e.target.value ? parseInt(e.target.value) : null)
+              setIsOpen(false);
+            }}
             className={cn(
               'w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600',
               'bg-white dark:bg-gray-700 text-gray-900 dark:text-white',
@@ -137,13 +136,15 @@ export function FilterPanel() {
           </select>
         </div>
 
-        {/* Sorting */}
         <div>
           <h4 className="font-medium text-gray-900 dark:text-white mb-3">Sort By</h4>
           <div className="space-y-2">
             <select
               value={sortBy}
-              onChange={(e) => setSorting(e.target.value as 'id' | 'name' | 'height' | 'weight', sortOrder)}
+              onChange={(e) => {
+                setSorting(e.target.value as 'id' | 'name' | 'height' | 'weight', sortOrder)
+                setIsOpen(false);
+              }}
               className={cn(
                 'w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600',
                 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white',
@@ -157,7 +158,10 @@ export function FilterPanel() {
             </select>
             <div className="flex gap-2">
               <button
-                onClick={() => setSorting(sortBy, 'asc')}
+                onClick={() => {
+                  setSorting(sortBy, 'asc')
+                  setIsOpen(false);
+                }}
                 className={cn(
                   'flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200',
                   sortOrder === 'asc'
@@ -168,7 +172,10 @@ export function FilterPanel() {
                 Ascending
               </button>
               <button
-                onClick={() => setSorting(sortBy, 'desc')}
+                onClick={() => {
+                  setSorting(sortBy, 'desc')
+                  setIsOpen(false);
+                }}
                 className={cn(
                   'flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200',
                   sortOrder === 'desc'
@@ -183,7 +190,6 @@ export function FilterPanel() {
         </div>
       </div>
 
-      {/* Overlay for mobile */}
       {isOpen && (
         <div
           className="fixed inset-0 bg-black/20 z-40 lg:hidden"

@@ -201,14 +201,14 @@ export function Grid() {
         className={
           viewMode === 'grid'
             ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'
-            : 'space-y-4'
+            : 'flex flex-col gap-4'
         }
       >
         {displayedPokemon.map((pokemon: Pokemon) => (
           <PokemonCard
             key={pokemon.id}
             pokemon={pokemon}
-            className={viewMode === 'list' ? 'max-w-sm' : ''}
+            className={viewMode === 'list' ? 'flex w-full justify-between items-center' : ''}
           />
         ))}
       </div>

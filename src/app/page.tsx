@@ -26,7 +26,7 @@ export default function HomePage() {
         </div>
         <div className="flex-1">
           <div className="flex flex-1 items-center sticky top-20 self-start z-20 h-14 py-0.5 mb-4 backdrop-blur-sm">
-            <div className="lg:hidden block">
+            <div className="lg:hidden block pr-1">
               <FilterPanel />
             </div>
             <div className="flex-1">
