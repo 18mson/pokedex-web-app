@@ -12,8 +12,8 @@ export const apolloClient = new ApolloClient({
         fields: {
           pokemon_v2_pokemon: {
             keyArgs: [],
-            merge(existing = [], incoming = []) {
-              return [...existing, ...incoming];
+            merge(_existing, incoming) {
+              return incoming;
             },
           },
         },

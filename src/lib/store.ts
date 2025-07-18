@@ -27,9 +27,11 @@ export interface Pokemon {
 }
 
 interface PokedexState {
+  // Theme
   theme: 'light' | 'dark';
   toggleTheme: () => void;
   
+  // Search & Filters
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   selectedTypes: string[];
@@ -40,33 +42,48 @@ interface PokedexState {
   sortOrder: 'asc' | 'desc';
   setSorting: (by: 'id' | 'name' | 'height' | 'weight', order: 'asc' | 'desc') => void;
   
+  // Pagination
+  pageSize: number;
+  setPageSize: (size: number) => void;
+  currentPage: number;
+  setCurrentPage: (page: number) => void;
+  totalCount: number;
+  setTotalCount: (count: number) => void;
+  
+  // Pokemon data
   allPokemon: Pokemon[];
   setAllPokemon: (pokemon: Pokemon[]) => void;
   filteredPokemon: Pokemon[];
   setFilteredPokemon: (pokemon: Pokemon[]) => void;
   
+  // Comparison
   comparisonPokemon: Pokemon[];
   addToComparison: (pokemon: Pokemon) => void;
   removeFromComparison: (pokemonId: number) => void;
   clearComparison: () => void;
   
+  // Favorites
   favorites: number[];
   toggleFavorite: (pokemonId: number) => void;
   
+  // UI State
   viewMode: 'grid' | 'list';
   setViewMode: (mode: 'grid' | 'list') => void;
   isLoading: boolean;
   setIsLoading: (loading: boolean) => void;
   
+  // Clear all filters
   clearFilters: () => void;
 }
 
 export const usePokedexStore = create<PokedexState>()(
   persist(
     (set, get) => ({
+      // Theme
       theme: 'light',
       toggleTheme: () => set((state) => ({ theme: state.theme === 'light' ? 'dark' : 'light' })),
       
+      // Search & Filters
       searchTerm: '',
       setSearchTerm: (term) => set({ searchTerm: term }),
       selectedTypes: [],
@@ -77,11 +94,21 @@ export const usePokedexStore = create<PokedexState>()(
       sortOrder: 'asc',
       setSorting: (by, order) => set({ sortBy: by, sortOrder: order }),
       
+      // Pagination
+      pageSize: 20,
+      setPageSize: (size) => set({ pageSize: size, currentPage: 1 }),
+      currentPage: 1,
+      setCurrentPage: (page) => set({ currentPage: page }),
+      totalCount: 0,
+      setTotalCount: (count) => set({ totalCount: count }),
+      
+      // Pokemon data
       allPokemon: [],
       setAllPokemon: (pokemon) => set({ allPokemon: pokemon }),
       filteredPokemon: [],
       setFilteredPokemon: (pokemon) => set({ filteredPokemon: pokemon }),
       
+      // Comparison
       comparisonPokemon: [],
       addToComparison: (pokemon) => {
         const current = get().comparisonPokemon;
@@ -96,6 +123,7 @@ export const usePokedexStore = create<PokedexState>()(
       },
       clearComparison: () => set({ comparisonPokemon: [] }),
       
+      // Favorites
       favorites: [],
       toggleFavorite: (pokemonId) => {
         set((state) => {
@@ -108,17 +136,20 @@ export const usePokedexStore = create<PokedexState>()(
         });
       },
       
+      // UI State
       viewMode: 'grid',
       setViewMode: (mode) => set({ viewMode: mode }),
       isLoading: false,
       setIsLoading: (loading) => set({ isLoading: loading }),
       
+      // Clear all filters
       clearFilters: () => set({
         searchTerm: '',
         selectedTypes: [],
         selectedGeneration: null,
         sortBy: 'id',
-        sortOrder: 'asc'
+        sortOrder: 'asc',
+        currentPage: 1
       }),
     }),
     {
@@ -129,6 +160,7 @@ export const usePokedexStore = create<PokedexState>()(
         viewMode: state.viewMode,
         sortBy: state.sortBy,
         sortOrder: state.sortOrder,
+        pageSize: state.pageSize,
       }),
     }
   )
