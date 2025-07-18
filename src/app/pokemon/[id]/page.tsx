@@ -5,9 +5,11 @@ import { GET_POKEMON_DETAIL, GET_POKEMON_LIST } from '@/lib/graphql/queries';
 import { PokemonDetail } from './PokemonDetail';
 import { formatPokemonName } from '@/lib/utils/pokemon';
 
-interface Props {
-  params: { id: string };
-}
+type PageProps = {
+  params: {
+    id: string;
+  };
+};
 
 export async function generateStaticParams() {
   try {
@@ -19,11 +21,7 @@ export async function generateStaticParams() {
       },
     });
 
-    interface PokemonListItem {
-      id: number;
-    }
-
-    return data.pokemon_v2_pokemon.map((pokemon: PokemonListItem) => ({
+    return data.pokemon_v2_pokemon.map((pokemon: { id: number }) => ({
       id: pokemon.id.toString(),
     }));
   } catch (error) {
@@ -34,13 +32,11 @@ export async function generateStaticParams() {
   }
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const id = parseInt(params.id);
-  
+
   if (isNaN(id)) {
-    return {
-      title: 'Pokemon Not Found',
-    };
+    return { title: 'Pokemon Not Found' };
   }
 
   try {
@@ -51,14 +47,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
     const pokemon = data.pokemon_v2_pokemon_by_pk;
     if (!pokemon) {
-      return {
-        title: 'Pokemon Not Found',
-      };
+      return { title: 'Pokemon Not Found' };
     }
 
     return {
       title: `${formatPokemonName(pokemon.name)} - Pokédex`,
-      description: `Detailed information about ${formatPokemonName(pokemon.name)}, including stats, types, abilities, and evolution chain.`,
+      description: `Details of ${formatPokemonName(pokemon.name)}, including stats, types, and more.`,
       openGraph: {
         title: `${formatPokemonName(pokemon.name)} - Pokédex`,
         description: `Discover everything about ${formatPokemonName(pokemon.name)}`,
@@ -66,13 +60,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
     };
   } catch {
-    return {
-      title: `Pokemon Not Found`,
-    };
+    return { title: 'Pokemon Not Found' };
   }
 }
 
-export default async function PokemonDetailPage({ params }: Props) {
+export default async function PokemonDetailPage({ params }: PageProps) {
   const id = parseInt(params.id);
   
   if (isNaN(id)) {
@@ -90,10 +82,9 @@ export default async function PokemonDetailPage({ params }: Props) {
       notFound();
     }
 
-    console.log('Pokemon Detail:', pokemon);
-
     return <PokemonDetail pokemon={pokemon} />;
-  } catch {
+  } catch (error) {
+    console.error('Error fetching Pokémon:', error);
     notFound();
   }
 }
