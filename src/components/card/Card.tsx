@@ -44,8 +44,6 @@ export function PokemonCard({ pokemon, className }: PokemonCardProps) {
   const primaryType = pokemon.pokemon_v2_pokemontypes[0]?.pokemon_v2_type.name;
   const typeColor = primaryType ? getTypeColor(primaryType) : '#68A090';
 
-  console.log(pokemon)
-
   return (
     <Link href={`/pokemon/${pokemon.id}`}>
       <div

@@ -68,7 +68,7 @@ export function FilterPanel() {
         className={cn(
           'absolute lg:relative top-full lg:top-auto left-0 right-0 z-20',
           'w-[calc(100vw-2em)] lg:w-fit',
-          'max-h-[calc(100vh-150px)] lg:h-auto',
+          'max-h-[calc(100vh-150px)] lg:max-h-none',
           'bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg lg:shadow-none',
           'p-4 space-y-6 mt-2 lg:mt-0 overflow-y-auto',
           isOpen ? 'block' : 'hidden lg:block'

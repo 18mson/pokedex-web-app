@@ -11,9 +11,23 @@ import {
   formatStat,
   getStatTotal 
 } from '@/lib/utils/pokemon';
+import EvolutionChain from '@/components/evolutionChain/EvolutionChain';
 import { cn } from '@/lib/utils';
 
 interface Pokemon {
+  pokemon_v2_pokemonmoves: {
+    pokemon_v2_move: {
+      name: string;
+      power: number | null;
+      accuracy: number | null;
+      pokemon_v2_type: {
+        name: string;
+      };
+      pokemon_v2_movenames?: {
+        name: string;
+      }[];
+    };
+  }[];
   id: number;
   name: string;
   height: number;
@@ -22,7 +36,15 @@ interface Pokemon {
   pokemon_v2_pokemontypes: Array<{
     pokemon_v2_type: { name: string };
   }>;
-  pokemon_v2_pokemonspecy?: {
+  pokemon_v2_pokemonspecy: {
+    pokemon_v2_evolutionchain: {
+      pokemon_v2_pokemonspecies: Array<{
+        id: number;
+        name: string;
+        pokemon_v2_pokemons: Array<{ id: number; name: string }>;
+      }>;
+    };
+    generation_id: number;
     pokemon_v2_pokemonspeciesnames?: Array<{ genus: string }>;
     pokemon_v2_generation?: { name: string };
     pokemon_v2_pokemonspeciesflavortexts?: Array<{ flavor_text: string }>;
@@ -264,39 +286,38 @@ export function PokemonDetail({ pokemon }: PokemonDetailProps) {
             </div>
           </div>
         </div>
+        {(pokemon.pokemon_v2_pokemonabilities && pokemon.pokemon_v2_pokemonabilities.length > 0) && (
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              Abilities
+            </h3>
+            <div className="space-y-2">
+              {pokemon.pokemon_v2_pokemonabilities.map(
+                (
+                  abilityInfo: {
+                    pokemon_v2_ability: {
+                      name: string;
+                      pokemon_v2_abilitynames?: { name: string }[];
+                    };
+                  },
+                  index: number
+                ) => (
+                  <div
+                    key={index}
+                    className="px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg"
+                  >
+                    <span className="font-medium text-gray-900 dark:text-white">
+                      {abilityInfo.pokemon_v2_ability.pokemon_v2_abilitynames?.[0]?.name ||
+                        formatPokemonName(abilityInfo.pokemon_v2_ability.name)}
+                    </span>
+                  </div>
+                )
+              )}
+            </div>
+          </div>
+        )}
 
         <div className="space-y-6">
-          {(pokemon.pokemon_v2_pokemonabilities && pokemon.pokemon_v2_pokemonabilities.length > 0) && (
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                Abilities
-              </h3>
-              <div className="space-y-2">
-                {pokemon.pokemon_v2_pokemonabilities.map(
-                  (
-                    abilityInfo: {
-                      pokemon_v2_ability: {
-                        name: string;
-                        pokemon_v2_abilitynames?: { name: string }[];
-                      };
-                    },
-                    index: number
-                  ) => (
-                    <div
-                      key={index}
-                      className="px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg"
-                    >
-                      <span className="font-medium text-gray-900 dark:text-white">
-                        {abilityInfo.pokemon_v2_ability.pokemon_v2_abilitynames?.[0]?.name ||
-                          formatPokemonName(abilityInfo.pokemon_v2_ability.name)}
-                      </span>
-                    </div>
-                  )
-                )}
-              </div>
-            </div>
-          )}
-
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
               Generation
@@ -305,6 +326,13 @@ export function PokemonDetail({ pokemon }: PokemonDetailProps) {
               {pokemon.pokemon_v2_pokemonspecy?.pokemon_v2_generation?.name &&
                 formatPokemonName(pokemon.pokemon_v2_pokemonspecy.pokemon_v2_generation.name)}
             </div>
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+            <EvolutionChain
+              species={pokemon.pokemon_v2_pokemonspecy.pokemon_v2_evolutionchain.pokemon_v2_pokemonspecies}
+              currentPokemonName={pokemon.name}
+            />
           </div>
 
           {pokemon.pokemon_v2_pokemonspecy?.pokemon_v2_pokemonspeciesflavortexts?.[0] && (
@@ -318,6 +346,30 @@ export function PokemonDetail({ pokemon }: PokemonDetailProps) {
             </div>
           )}
         </div>
+
+        {pokemon.pokemon_v2_pokemonmoves?.length > 0 && (
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              Moves
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {pokemon.pokemon_v2_pokemonmoves.slice(0, 10).map((moveData, index) => {
+                const move = moveData.pokemon_v2_move;
+                const moveName = move.pokemon_v2_movenames?.[0]?.name ?? move.name;
+
+                return (
+                  <div key={index} className="border border-gray-300 dark:border-gray-700 rounded-lg p-4">
+                    <p className="text-md font-semibold text-gray-800 dark:text-white">{moveName}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Type: {move.pokemon_v2_type.name}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Power: {move.power ?? '—'}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Accuracy: {move.accuracy ?? '—'}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+         
       </div>
     </div>
   );

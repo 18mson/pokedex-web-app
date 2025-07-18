@@ -90,6 +90,8 @@ export default async function PokemonDetailPage({ params }: Props) {
       notFound();
     }
 
+    console.log('Pokemon Detail:', pokemon);
+
     return <PokemonDetail pokemon={pokemon} />;
   } catch {
     notFound();

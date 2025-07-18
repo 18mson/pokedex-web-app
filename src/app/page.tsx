@@ -1,5 +1,3 @@
-'use client';
-
 import { SearchBar } from '@/components/searchBar/SearchBar';
 import { FilterPanel } from '@/components/filter/Filter';
 import { Grid } from '@/components/layout/Grid';
