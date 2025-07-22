@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { X, BarChart3, Eye, EyeOff, Maximize2, TrendingUp, Award } from 'lucide-react';
+import { X, BarChart3, Maximize2, TrendingUp, Award, ChevronDown, ChevronUp } from 'lucide-react';
 import Image from 'next/image';
 import { usePokedexStore } from '@/lib/store';
-import { getPokemonImageUrl, getTypeColor, formatPokemonName, formatStat, getPokemonStats } from '@/lib/utils/pokemon';
+import { getPokemonImageUrl, getTypeColor, formatPokemonName, formatStat, getPokemonStats, getPokemonGen } from '@/lib/utils/pokemon';
 import { cn } from '@/lib/utils';
 import { Pokemon } from '@/lib/types';
 
@@ -16,6 +16,9 @@ export function ComparisonPanel() {
   if (comparisonPokemon.length === 0) {
     return null;
   }
+
+  console.log(comparisonPokemon);
+  
 
   const statNames = ['hp', 'attack', 'defense', 'special-attack', 'special-defense', 'speed'];
   
@@ -145,11 +148,56 @@ export function ComparisonPanel() {
                               {totalStats}
                             </span>
                           </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-600 dark:text-gray-400">Generation:</span>
+                            <span className="text-gray-900 dark:text-white capitalize">
+                              {getPokemonGen(pokemon)}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
                   );
                 })}
+              </div>
+
+              {/* Abilities Comparison */}
+              <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden mb-8">
+                <div className="p-4 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                    <Award className="w-5 h-5 text-blue-600" />
+                    Abilities Comparison
+                  </h3>
+                </div>
+                <div className="p-4">
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    {comparisonPokemon.map((pokemon) => {
+                      const primaryType = pokemon.pokemon_v2_pokemontypes[0]?.pokemon_v2_type.name;
+                      const typeColor = primaryType ? getTypeColor(primaryType) : '#68A090';
+
+                      return (
+                        <div key={pokemon.id} className="space-y-2">
+                          <div className="text-sm font-medium text-gray-900 dark:text-white mb-2">
+                            {formatPokemonName(pokemon.name)}
+                          </div>
+                          <div className="space-y-2">
+                            {pokemon.pokemon_v2_pokemonabilities?.map((ability) => (
+                              <div
+                                key={ability.pokemon_v2_ability.name}
+                                className="px-3 py-2 rounded-lg text-sm"
+                                style={{ backgroundColor: `${typeColor}15` }}
+                              >
+                                <div className="font-medium text-gray-900 dark:text-white">
+                                  {formatPokemonName(ability.pokemon_v2_ability.name)}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
 
               {/* Detailed Stats Comparison */}
@@ -164,7 +212,6 @@ export function ComparisonPanel() {
                   <div className="space-y-6">
                     {statNames.map((statName) => {
                       const statComparison = getStatComparison(statName);
-                      // const maxValue = Math.max(...statComparison.map(s => s.value));
 
                       return (
                         <div key={statName} className="space-y-3">
@@ -234,19 +281,19 @@ export function ComparisonPanel() {
               Pokemon Comparison ({comparisonPokemon.length}/4)
             </h3>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setIsMinimized(!isMinimized)}
+              className="p-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+            >
+              {isMinimized ? <ChevronDown className="w-5 h-5" /> : <ChevronUp className="w-5 h-5" />}
+            </button>
             <button
               onClick={() => setIsExpanded(true)}
               className="p-1 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"
               title="Expand comparison"
             >
               <Maximize2 className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => setIsMinimized(!isMinimized)}
-              className="p-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-            >
-              {isMinimized ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
             </button>
             <button
               onClick={clearComparison}
@@ -357,14 +404,37 @@ export function ComparisonPanel() {
                         <div className="flex justify-between">
                           <span className="text-gray-600 dark:text-gray-400">Height:</span>
                           <span className="text-gray-900 dark:text-white">
-                            {(pokemon.height / 10).toFixed(1)}m
+                            {(pokemon.height / 10).toFixed(1)} m
                           </span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600 dark:text-gray-400">Weight:</span>
                           <span className="text-gray-900 dark:text-white">
-                            {(pokemon.weight / 10).toFixed(1)}kg
+                            {(pokemon.weight / 10).toFixed(1)} kg
                           </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600 dark:text-gray-400">Generation:</span>
+                          <span className="text-gray-900 dark:text-white capitalize">
+                            {getPokemonGen(pokemon)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Abilities */}
+                    <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
+                      <div className="space-y-1 text-sm">
+                        <span className="text-gray-600 dark:text-gray-400 font-medium">Abilities:</span>
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {pokemon.pokemon_v2_pokemonabilities?.map((ability) => (
+                            <span
+                              key={ability.pokemon_v2_ability.name}
+                              className="px-2 py-1 bg-gray-200 dark:bg-gray-600 rounded text-xs text-gray-700 dark:text-gray-300"
+                            >
+                              {formatPokemonName(ability.pokemon_v2_ability.name)}
+                            </span>
+                          ))}
                         </div>
                       </div>
                     </div>

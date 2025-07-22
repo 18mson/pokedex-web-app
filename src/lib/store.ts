@@ -16,9 +16,9 @@ interface PokedexState {
   setSelectedTypes: (types: string[]) => void;
   selectedGeneration: number | null;
   setSelectedGeneration: (gen: number | null) => void;
-  sortBy: 'id' | 'name' | 'height' | 'weight';
+  sortBy: 'id' | 'name' | 'height' | 'weight' | 'basebase_stat';
   sortOrder: 'asc' | 'desc';
-  setSorting: (by: 'id' | 'name' | 'height' | 'weight', order: 'asc' | 'desc') => void;
+  setSorting: (by: 'id' | 'name' | 'height' | 'weight' | 'basebase_stat', order: 'asc' | 'desc') => void;
   
   // Pagination
   pageSize: number;

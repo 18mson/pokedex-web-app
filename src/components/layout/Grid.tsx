@@ -3,7 +3,6 @@
 import { useEffect, useMemo } from 'react';
 import { useQuery } from '@apollo/client';
 import { PokemonCard } from '../card/Card';
-import { LoadingSpinner } from '../loading/LoadingSpinner';
 import { usePokedexStore } from '@/lib/store';
 import { GET_POKEMON_COUNT, GET_POKEMON_LIST } from '@/lib/graphql/queries';
 import { ChevronLeft, ChevronRight, Settings } from 'lucide-react';
@@ -51,9 +50,10 @@ export function Grid() {
     viewMode,
   } = usePokedexStore();
 
+
+
   const whereClause = useMemo(() => {
     const conditions: whereClause = {};
-    
     if (searchTerm) {
       conditions.name = { _ilike: `%${searchTerm}%` };
     }
@@ -77,16 +77,34 @@ export function Grid() {
     return Object.keys(conditions).length > 0 ? conditions : undefined;
   }, [searchTerm, selectedTypes, selectedGeneration]);
 
-    const orderByClause = useMemo(() => {
-    const orderMap: Record<string, string> = {
-      id: 'id',
-      name: 'name',
-      height: 'height',
-      weight: 'weight'
+
+
+const orderByClause = useMemo(() => {
+
+  if ('base_stat'.includes(sortBy)) {
+    return {
+      pokemon_v2_pokemonstats_aggregate: {
+          sum: {
+            base_stat: sortOrder
+          }
+        }
     };
-    
-    return [{ [orderMap[sortBy]]: sortOrder }];
-  }, [sortBy, sortOrder]);
+  }
+
+  const fieldMap: Record<string, string> = {
+    id: 'id',
+    name: 'name',
+    height: 'height',
+    weight: 'weight',
+  };
+
+  return [
+    {
+      [fieldMap[sortBy]]: sortOrder,
+    },
+  ];
+}, [sortBy, sortOrder]);
+
 
   const { loading: loadingTotal } = useQuery(GET_POKEMON_COUNT, {
     variables: { where: whereClause },
@@ -109,12 +127,10 @@ export function Grid() {
   const displayedPokemon = data?.pokemon_v2_pokemon || [];
   const totalPages = Math.ceil(totalCount / pageSize);
 
-    // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, selectedTypes, selectedGeneration, sortBy, sortOrder, setCurrentPage]);
 
-  // Reset to page 1 when page size changes
   useEffect(() => {
     setCurrentPage(1);
   }, [pageSize, setCurrentPage]);
@@ -139,9 +155,19 @@ export function Grid() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center py-12">
-        <LoadingSpinner size="lg" />
-        <span className="ml-2 text-gray-600 dark:text-gray-400">Loading Pokemon...</span>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {[...Array(12)].map((_, i) => (
+          <div
+            key={i}
+            className="animate-pulse rounded-lg bg-gray-200 dark:bg-gray-700 h-[300px]"
+          >
+            <div className="h-48 bg-gray-300 dark:bg-gray-600 rounded-t-lg" />
+            <div className="p-4 space-y-3">
+              <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-3/4" />
+              <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-1/2" />
+            </div>
+          </div>
+        ))}
       </div>
     );
   }
@@ -187,10 +213,9 @@ export function Grid() {
               'focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm'
             )}
           >
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
+            <option value={12}>12</option>
+            <option value={24}>24</option>
+            <option value={48}>48</option>
           </select>
         </div>
         
@@ -216,14 +241,11 @@ export function Grid() {
 
       {totalPages > 1 && (
         <div className="flex flex-col sm:flex-row items-center justify-between mt-8 gap-4">
-          {/* Page Info */}
           <div className="text-sm text-gray-600 dark:text-gray-400">
             Showing {((currentPage - 1) * pageSize) + 1} to {Math.min(currentPage * pageSize, totalCount)} of {totalCount} Pokemon
           </div>
 
-          {/* Pagination Controls */}
           <div className="flex items-center gap-2">
-            {/* Previous Button */}
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
@@ -238,7 +260,6 @@ export function Grid() {
               <span className="hidden sm:inline">Previous</span>
             </button>
 
-            {/* Page Numbers */}
             <div className="flex items-center gap-1">
               {currentPage > 3 && (
                 <>
@@ -284,7 +305,6 @@ export function Grid() {
               )}
             </div>
 
-            {/* Next Button */}
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}

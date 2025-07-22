@@ -77,7 +77,13 @@ export default async function PokemonDetailPage({ params }: { params: Promise<{ 
     const pokemon = data.pokemon_v2_pokemon_by_pk;
     if (!pokemon) notFound();
 
-    return <PokemonDetail pokemon={pokemon} />;
+    // Initial render with pokemon data while type effectiveness loads
+    return (
+      <PokemonDetail 
+        pokemon={pokemon} 
+      />
+    );
+
   } catch {
     notFound();
   }

@@ -55,44 +55,63 @@ export const getPokemonStats = (pokemon: Pokemon) => {
   }, {} as Record<string, number>);
 };
 
+export const getPokemonGen = (pokemon: Pokemon): string => {
+  return pokemon.pokemon_v2_pokemonspecy?.pokemon_v2_generation?.name ?? '';
+};
+
 export const getStatTotal = (pokemon: Pokemon): number => {
   return pokemon.pokemon_v2_pokemonstats.reduce((total, stat) => total + stat.base_stat, 0);
 };
 
 export const sortPokemon = (
   pokemon: Pokemon[],
-  sortBy: 'id' | 'name' | 'height' | 'weight',
+  sortBy: 'id' | 'name' | 'height' | 'weight' | 'hp' | 'attack' | 'defense' | 'special-attack' | 'special-defense' | 'speed',
   order: 'asc' | 'desc'
 ): Pokemon[] => {
   return [...pokemon].sort((a, b) => {
+    const isStat = ['hp', 'attack', 'defense', 'special-attack', 'special-defense', 'speed'].includes(sortBy);
+
     let aValue: string | number;
     let bValue: string | number;
 
-    switch (sortBy) {
-      case 'name':
-        aValue = a.name;
-        bValue = b.name;
-        break;
-      case 'height':
-        aValue = a.height;
-        bValue = b.height;
-        break;
-      case 'weight':
-        aValue = a.weight;
-        bValue = b.weight;
-        break;
-      default:
-        aValue = a.id;
-        bValue = b.id;
+    if (isStat) {
+      const getStatValue = (stats: Pokemon['pokemon_v2_pokemonstats']) =>
+        stats.find((s) => s.pokemon_v2_stat.name === sortBy)?.base_stat ?? 0;
+
+      aValue = getStatValue(a.pokemon_v2_pokemonstats);
+      bValue = getStatValue(b.pokemon_v2_pokemonstats);
+    } else {
+      switch (sortBy) {
+        case 'name':
+          aValue = a.name;
+          bValue = b.name;
+          break;
+        case 'height':
+          aValue = a.height;
+          bValue = b.height;
+          break;
+        case 'weight':
+          aValue = a.weight;
+          bValue = b.weight;
+          break;
+        default:
+          aValue = a.id;
+          bValue = b.id;
+      }
     }
 
     if (typeof aValue === 'string' && typeof bValue === 'string') {
-      return order === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+      return order === 'asc'
+        ? aValue.localeCompare(bValue)
+        : bValue.localeCompare(aValue);
     }
 
-    return order === 'asc' ? (aValue as number) - (bValue as number) : (bValue as number) - (aValue as number);
+    return order === 'asc'
+      ? (aValue as number) - (bValue as number)
+      : (bValue as number) - (aValue as number);
   });
 };
+
 
 export const filterPokemon = (
   pokemon: Pokemon[],
@@ -121,4 +140,19 @@ export const filterPokemon = (
 
     return true;
   });
+};
+
+export const getEffectivenessLabel = (factor: number): string => {
+  switch (factor) {
+    case 0:
+      return 'Immune';
+    case 50:
+      return 'Not Very Effective (½×)';
+    case 100:
+      return 'Normal (1×)';
+    case 200:
+      return 'Super Effective (2×)';
+    default:
+      return `${factor / 100}× Damage`;
+  }
 };

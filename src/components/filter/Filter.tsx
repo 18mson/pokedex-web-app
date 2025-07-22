@@ -142,7 +142,7 @@ export function FilterPanel() {
             <select
               value={sortBy}
               onChange={(e) => {
-                setSorting(e.target.value as 'id' | 'name' | 'height' | 'weight', sortOrder)
+                setSorting(e.target.value as 'id' | 'name' | 'height' | 'weight' | 'basebase_stat', sortOrder)
                 setIsOpen(false);
               }}
               className={cn(
@@ -155,6 +155,7 @@ export function FilterPanel() {
               <option value="name">Name</option>
               <option value="height">Height</option>
               <option value="weight">Weight</option>
+              <option value="base_stat">Total Stats</option>
             </select>
             <div className="flex gap-2">
               <button

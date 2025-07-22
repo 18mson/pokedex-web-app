@@ -28,6 +28,12 @@ export interface Pokemon {
     pokemon_v2_generation?: { name: string };
     pokemon_v2_pokemonspeciesflavortexts?: Array<{ flavor_text: string }>;
   };
+  pokemon_v2_pokemonabilities?: Array<{
+    pokemon_v2_ability: {
+      name: string;
+      pokemon_v2_abilitynames?: Array<{ name: string }>;
+    };
+  }>;
 }
 
 export interface DetailPokemon extends Pokemon {
@@ -50,7 +56,8 @@ export interface DetailPokemon extends Pokemon {
   weight: number;
   base_experience: number;
   pokemon_v2_pokemontypes: Array<{
-    pokemon_v2_type: { name: string };
+    pokemon_v2_type: { name: string, id: number };
+
   }>;
   pokemon_v2_pokemonspecy: {
     pokemon_v2_evolutionchain: {
@@ -75,4 +82,10 @@ export interface DetailPokemon extends Pokemon {
       pokemon_v2_abilitynames?: Array<{ name: string }>;
     };
   }>;
+}
+
+export interface TypeEffectiveness {
+  damage_factor: number;
+  pokemon_v2_type: { name: string };
+  pokemonV2TypeByTargetTypeId: { name: string };
 }

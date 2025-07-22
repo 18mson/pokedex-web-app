@@ -19,7 +19,7 @@ export default function EvolutionChain({ species, currentPokemonName }: Props) {
   const sorted = [...species].sort((a, b) => a.id - b.id);
 
   return (
-    <div className="mt-6">
+    <div>
       <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Evolution Chain</h2>
       <div className="flex flex-wrap items-center gap-4">
         {sorted.map((s, index) => {

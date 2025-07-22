@@ -92,7 +92,7 @@ export function PokemonCard({ pokemon, viewMode }: PokemonCardProps) {
           </span>
         </div>
         <div className={cn(
-          viewMode === 'list' ? 'flex w-full justify-between items-center' : ''
+          viewMode === 'list' ? 'flex w-full justify-between items-center pt-12 lg:pt-8' : ''
         )
         }>
           <div className="relative h-48 flex items-center justify-center p-4">
@@ -101,8 +101,9 @@ export function PokemonCard({ pokemon, viewMode }: PokemonCardProps) {
               alt={formatPokemonName(pokemon.name)}
               width={120}
               height={120}
-              className="object-contain group-hover:scale-110 transition-transform duration-300"
+              className="object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl"
               loading="lazy"
+              priority={false}
             />
           </div>
 
@@ -124,7 +125,7 @@ export function PokemonCard({ pokemon, viewMode }: PokemonCardProps) {
             </div>
 
             <div className={cn("space-y-1",
-              viewMode === 'list' ? 'flex flex-row space-x-4' : ''
+              viewMode === 'list' ? 'flex flex-row space-x-4 items-center' : ''
             )}>
               <div className="grid grid-cols-2 gap-2 justify-between items-center">
                 <span className="text-gray-600 dark:text-gray-400">Height:</span>
@@ -148,7 +149,7 @@ export function PokemonCard({ pokemon, viewMode }: PokemonCardProps) {
                     
                     return (
                       <div key={stat.pokemon_v2_stat.name} className={cn("text-center",
-                        viewMode === 'list' ? 'flex items-center space-x-4' : ''
+                        viewMode === 'list' ? 'flex items-center space-x-4 justify-between md:justify-around' : ''
                       )}>
                         <div className="text-gray-500 dark:text-gray-400 mb-1 min-w-6">
                           {stat.pokemon_v2_stat.name === 'hp' ? 'HP' :
@@ -158,7 +159,7 @@ export function PokemonCard({ pokemon, viewMode }: PokemonCardProps) {
                         <div className="font-semibold text-gray-900 dark:text-white text-sm mb-1">
                           {stat.base_stat}
                         </div>
-                        <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-1">
+                        <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-1 hidden md:block">
                           <div
                             className="h-1 rounded-full transition-all duration-300"
                             style={{

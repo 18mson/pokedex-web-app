@@ -30,6 +30,14 @@ export const GET_POKEMON_LIST = gql`
           name
         }
       }
+      pokemon_v2_pokemonabilities {
+        pokemon_v2_ability {
+          name
+          pokemon_v2_abilitynames(where: { language_id: { _eq: 9 } }) {
+            name
+          }
+        }
+      }
     }
   }
 `;
@@ -60,6 +68,7 @@ export const GET_POKEMON_DETAIL = gql`
       }
       pokemon_v2_pokemontypes {
         pokemon_v2_type {
+          id
           name
         }
       }
@@ -123,30 +132,20 @@ export const GET_POKEMON_TYPES = gql`
   }
 `;
 
-export const SEARCH_POKEMON = gql`
-  query SearchPokemon($name: String!) {
-    pokemon_v2_pokemon(where: { name: { _ilike: $name } }, limit: 20) {
-      id
-      name
-      height
-      weight
-      base_experience
-      pokemon_v2_pokemonstats {
-        base_stat
-        pokemon_v2_stat {
-          name
-        }
+export const GET_TYPE_EFFECTIVENESS = gql`
+  query GetTypeEffectiveness($id: Int!) {
+    pokemon_v2_typeefficacy(
+      where: {
+        damage_type_id: { _eq: $id }
       }
-      pokemon_v2_pokemontypes {
-        pokemon_v2_type {
-          name
-        }
+    ) {
+      damage_factor
+      target_type_id
+      pokemonV2TypeByTargetTypeId {
+        name
       }
-      pokemon_v2_pokemonspecy {
-        generation_id
-        pokemon_v2_generation {
-          name
-        }
+      pokemon_v2_type {
+        name 
       }
     }
   }
