@@ -286,7 +286,7 @@ export function ComparisonPanel() {
               onClick={() => setIsMinimized(!isMinimized)}
               className="p-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
             >
-              {isMinimized ? <ChevronDown className="w-5 h-5" /> : <ChevronUp className="w-5 h-5" />}
+              {isMinimized ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
             </button>
             <button
               onClick={() => setIsExpanded(true)}
