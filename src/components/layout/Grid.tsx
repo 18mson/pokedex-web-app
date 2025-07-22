@@ -208,7 +208,7 @@ export function Grid() {
           <PokemonCard
             key={pokemon.id}
             pokemon={pokemon}
-            className={viewMode === 'list' ? 'flex w-full justify-between items-center' : ''}
+            viewMode={viewMode}
           />
         ))}
       </div>

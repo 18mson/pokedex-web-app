@@ -1,30 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { Pokemon } from './types';
 
-export interface Pokemon {
-  id: number;
-  name: string;
-  height: number;
-  weight: number;
-  base_experience: number;
-  pokemon_v2_pokemonstats: Array<{
-    base_stat: number;
-    pokemon_v2_stat: {
-      name: string;
-    };
-  }>;
-  pokemon_v2_pokemontypes: Array<{
-    pokemon_v2_type: {
-      name: string;
-    };
-  }>;
-  pokemon_v2_pokemonspecy: {
-    generation_id: number;
-    pokemon_v2_generation: {
-      name: string;
-    };
-  };
-}
+
 
 interface PokedexState {
   // Theme

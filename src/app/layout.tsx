@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { ApolloProviderWrapper } from '@/components/providers/ApolloProvider';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
 import { Header } from '@/components/layout/Header';
+import { ComparisonPanel } from '@/components/comparison/ComparisonPanel';
 
 export const metadata: Metadata = {
   title: 'Pokédex - Discover and Explore Pokemon',
@@ -31,6 +32,7 @@ export default function RootLayout({
               <main className="pb-24">
                 {children}
               </main>
+              <ComparisonPanel />
             </div>
           </ThemeProvider>
         </ApolloProviderWrapper>

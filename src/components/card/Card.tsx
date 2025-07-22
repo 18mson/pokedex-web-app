@@ -3,16 +3,17 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Heart, Plus, Minus } from 'lucide-react';
-import { Pokemon, usePokedexStore } from '@/lib/store';
+import { usePokedexStore } from '@/lib/store';
 import { getPokemonImageUrl, getTypeColor, formatPokemonName } from '@/lib/utils/pokemon';
 import { cn } from '@/lib/utils';
+import { Pokemon } from '@/lib/types';
 
 interface PokemonCardProps {
   pokemon: Pokemon;
-  className?: string;
+  viewMode: 'grid' | 'list';
 }
 
-export function PokemonCard({ pokemon, className }: PokemonCardProps) {
+export function PokemonCard({ pokemon, viewMode }: PokemonCardProps) {
   const {
     favorites,
     toggleFavorite,
@@ -90,7 +91,10 @@ export function PokemonCard({ pokemon, className }: PokemonCardProps) {
             #{pokemon.id.toString().padStart(3, '0')}
           </span>
         </div>
-        <div className={className}>
+        <div className={cn(
+          viewMode === 'list' ? 'flex w-full justify-between items-center' : ''
+        )
+        }>
           <div className="relative h-48 flex items-center justify-center p-4">
             <Image
               src={getPokemonImageUrl(pokemon.id)}
@@ -119,18 +123,64 @@ export function PokemonCard({ pokemon, className }: PokemonCardProps) {
               ))}
             </div>
 
-            <div className="space-y-1">
-              <div className="flex justify-between text-sm">
+            <div className={cn("space-y-1",
+              viewMode === 'list' ? 'flex flex-row space-x-4' : ''
+            )}>
+              <div className="grid grid-cols-2 gap-2 justify-between items-center">
                 <span className="text-gray-600 dark:text-gray-400">Height:</span>
-                <span className="font-medium text-gray-900 dark:text-white">
+                <span className="font-medium text-gray-900 dark:text-white text-end">
                   {(pokemon.height / 10).toFixed(1)}m
                 </span>
-              </div>
-              <div className="flex justify-between text-sm">
                 <span className="text-gray-600 dark:text-gray-400">Weight:</span>
-                <span className="font-medium text-gray-900 dark:text-white">
+                <span className="font-medium text-gray-900 dark:text-white text-end">
                   {(pokemon.weight / 10).toFixed(1)}kg
                 </span>
+              </div>
+
+              {/* Basic Stats Preview */}
+              <div className="pt-2 border-t border-gray-200 dark:border-gray-700 flex-1">
+                <div className={cn("gap-2 text-xs",
+                  viewMode === 'list' ? 'flex flex-col text-start' : 'grid grid-cols-3'
+                )}>
+                  {pokemon.pokemon_v2_pokemonstats.slice(0, 3).map((stat) => {
+                    const maxStat = 255; 
+                    const percentage = (stat.base_stat / maxStat) * 100;
+                    
+                    return (
+                      <div key={stat.pokemon_v2_stat.name} className={cn("text-center",
+                        viewMode === 'list' ? 'flex items-center space-x-4' : ''
+                      )}>
+                        <div className="text-gray-500 dark:text-gray-400 mb-1 min-w-6">
+                          {stat.pokemon_v2_stat.name === 'hp' ? 'HP' :
+                          stat.pokemon_v2_stat.name === 'attack' ? 'ATK' :
+                          stat.pokemon_v2_stat.name.slice(0, 3).toUpperCase()}
+                        </div>
+                        <div className="font-semibold text-gray-900 dark:text-white text-sm mb-1">
+                          {stat.base_stat}
+                        </div>
+                        <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-1">
+                          <div
+                            className="h-1 rounded-full transition-all duration-300"
+                            style={{
+                              width: `${percentage}%`,
+                              backgroundColor: typeColor,
+                            }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                
+                {/* Total Stats */}
+                <div className="mt-2 pt-2 border-t border-gray-100 dark:border-gray-600">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-gray-500 dark:text-gray-400">Total:</span>
+                    <span className="text-sm font-bold text-gray-900 dark:text-white">
+                      {pokemon.pokemon_v2_pokemonstats.reduce((sum, stat) => sum + stat.base_stat, 0)}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import { Pokemon } from '../store';
+import { Pokemon } from "../types";
 
 export const getPokemonImageUrl = (id: number): string => {
   return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
@@ -115,7 +115,7 @@ export const filterPokemon = (
     }
 
     // Generation filter
-    if (selectedGeneration && p.pokemon_v2_pokemonspecy.generation_id !== selectedGeneration) {
+    if (selectedGeneration && p.pokemon_v2_pokemonspecy && p.pokemon_v2_pokemonspecy.generation_id !== selectedGeneration) {
       return false;
     }
 
