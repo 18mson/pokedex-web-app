@@ -3,9 +3,10 @@
 import { useState } from 'react';
 import { X, BarChart3, Eye, EyeOff, Maximize2, TrendingUp, Award } from 'lucide-react';
 import Image from 'next/image';
-import { Pokemon, usePokedexStore } from '@/lib/store';
+import { usePokedexStore } from '@/lib/store';
 import { getPokemonImageUrl, getTypeColor, formatPokemonName, formatStat, getPokemonStats } from '@/lib/utils/pokemon';
 import { cn } from '@/lib/utils';
+import { Pokemon } from '@/lib/types';
 
 export function ComparisonPanel() {
   const { comparisonPokemon, removeFromComparison, clearComparison } = usePokedexStore();
