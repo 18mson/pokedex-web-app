@@ -4,10 +4,11 @@ import { useEffect, useMemo } from 'react';
 import { useQuery } from '@apollo/client';
 import { PokemonCard } from '../card/Card';
 import { LoadingSpinner } from '../loading/LoadingSpinner';
-import { Pokemon, usePokedexStore } from '@/lib/store';
+import { usePokedexStore } from '@/lib/store';
 import { GET_POKEMON_COUNT, GET_POKEMON_LIST } from '@/lib/graphql/queries';
 import { ChevronLeft, ChevronRight, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Pokemon } from '@/lib/types';
 
 
 interface whereClause {
