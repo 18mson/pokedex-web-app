@@ -75,6 +75,7 @@ export const CardDetail = ({
               <div className="flex gap-2">
                 <button
                   onClick={handleToggleFavorite}
+                  aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
                   className={cn(
                     'p-2 rounded-lg transition-all duration-200',
                     'bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm',
@@ -86,6 +87,7 @@ export const CardDetail = ({
                 </button>
                 <button
                   onClick={handleToggleComparison}
+                  aria-label={isInComparison ? 'Remove from comparison' : 'Add to comparison'}
                   disabled={!isInComparison && !canAddToComparison}
                   className={cn(
                     'p-2 rounded-lg transition-all duration-200',

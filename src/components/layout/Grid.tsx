@@ -159,6 +159,7 @@ const orderByClause = useMemo(() => {
         {[...Array(12)].map((_, i) => (
           <div
             key={i}
+            data-testid="loading-skeleton"
             className="animate-pulse rounded-lg bg-gray-200 dark:bg-gray-700 h-[300px]"
           >
             <div className="h-48 bg-gray-300 dark:bg-gray-600 rounded-t-lg" />

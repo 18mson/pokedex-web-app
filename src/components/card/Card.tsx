@@ -58,6 +58,7 @@ export function PokemonCard({ pokemon, viewMode }: PokemonCardProps) {
       >
         <button
           onClick={handleToggleFavorite}
+          aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
           className={cn(
             'absolute top-3 right-3 z-10 p-1.5 rounded-full transition-all duration-200',
             'bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm',
@@ -70,6 +71,7 @@ export function PokemonCard({ pokemon, viewMode }: PokemonCardProps) {
 
         <button
           onClick={handleToggleComparison}
+          aria-label={isInComparison ? 'Remove from comparison' : 'Add to comparison'}
           disabled={!isInComparison && !canAddToComparison}
           className={cn(
             'absolute top-3 left-3 z-10 p-1.5 rounded-full transition-all duration-200',
