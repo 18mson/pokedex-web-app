@@ -28,8 +28,6 @@ export function ComparisonPanel() {
         clearComparison={clearComparison}
         removeFromComparison={removeFromComparison}
       />
-
-      {/* Bottom Panel */}
       <div
         className={cn(
           'fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-gray-800 border-t border-gray-300 dark:border-gray-600 shadow-2xl',
@@ -86,15 +84,12 @@ export function ComparisonPanel() {
                       background: `linear-gradient(135deg, ${typeColor}10 0%, transparent 50%)`,
                     }}
                   >
-                    {/* Remove Button */}
                     <button
                       onClick={() => removeFromComparison(pokemon.id)}
                       className="absolute top-2 right-2 p-1 text-gray-400 hover:text-red-500"
                     >
                       <X className="w-4 h-4" />
                     </button>
-
-                    {/* Pokemon Header */}
                     <div className="text-center mb-4">
                       <div className="relative w-16 h-16 mx-auto mb-2">
                         <Image

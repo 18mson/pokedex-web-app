@@ -19,6 +19,7 @@ export function FilterPanel() {
     sortOrder,
     setSorting,
     clearFilters,
+    setCurrentPage
   } = usePokedexStore();
 
   const { data: typesData } = useQuery(GET_POKEMON_TYPES);
@@ -29,6 +30,7 @@ export function FilterPanel() {
     } else {
       setSelectedTypes([...selectedTypes, typeName]);
     }
+    setCurrentPage(1);
     setIsOpen(false);
   };
 
@@ -120,6 +122,7 @@ export function FilterPanel() {
             onChange={(e) => {
               setSelectedGeneration(e.target.value ? parseInt(e.target.value) : null)
               setIsOpen(false);
+              setCurrentPage(1);
             }}
             className={cn(
               'w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600',
@@ -144,6 +147,7 @@ export function FilterPanel() {
               onChange={(e) => {
                 setSorting(e.target.value as 'id' | 'name' | 'height' | 'weight' | 'basebase_stat', sortOrder)
                 setIsOpen(false);
+                setCurrentPage(1);
               }}
               className={cn(
                 'w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600',
@@ -162,6 +166,7 @@ export function FilterPanel() {
                 onClick={() => {
                   setSorting(sortBy, 'asc')
                   setIsOpen(false);
+                  setCurrentPage(1);
                 }}
                 className={cn(
                   'flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200',
@@ -176,6 +181,7 @@ export function FilterPanel() {
                 onClick={() => {
                   setSorting(sortBy, 'desc')
                   setIsOpen(false);
+                  setCurrentPage(1);
                 }}
                 className={cn(
                   'flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200',

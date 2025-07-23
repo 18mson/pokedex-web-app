@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useQuery } from '@apollo/client';
 import { PokemonCard } from '../card/Card';
 import { usePokedexStore } from '@/lib/store';
@@ -79,6 +79,7 @@ export function Grid() {
 
 
 
+
 const orderByClause = useMemo(() => {
 
   if ('base_stat'.includes(sortBy)) {
@@ -127,13 +128,13 @@ const orderByClause = useMemo(() => {
   const displayedPokemon = data?.pokemon_v2_pokemon || [];
   const totalPages = Math.ceil(totalCount / pageSize);
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm, selectedTypes, selectedGeneration, sortBy, sortOrder, setCurrentPage]);
+  // useEffect(() => {
+  //   setCurrentPage(1);
+  // }, [searchTerm, selectedTypes, selectedGeneration, sortBy, sortOrder, setCurrentPage]);
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [pageSize, setCurrentPage]);
+  // useEffect(() => {
+  //   setCurrentPage(1);
+  // }, [pageSize, setCurrentPage]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
@@ -207,7 +208,10 @@ const orderByClause = useMemo(() => {
           <span className="text-sm text-gray-600 dark:text-gray-400">Items per page:</span>
           <select
             value={pageSize}
-            onChange={(e) => setPageSize(Number(e.target.value))}
+            onChange={(e) => {
+              setPageSize(Number(e.target.value))
+              setCurrentPage(1);
+            }}
             className={cn(
               'px-3 py-1 rounded-lg border border-gray-300 dark:border-gray-600',
               'bg-white dark:bg-gray-800 text-gray-900 dark:text-white',

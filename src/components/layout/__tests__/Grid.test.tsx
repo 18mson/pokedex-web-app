@@ -222,7 +222,6 @@ describe('Grid', () => {
     });
     const select = screen.getByRole('combobox');
     fireEvent.change(select, { target: { value: '24' } });
-    // Just verify the select value changes, since the mock setup is complex
     expect(select).toHaveValue('24');
   });
 });

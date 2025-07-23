@@ -1,12 +1,11 @@
 'use client';
 
-import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { usePokedexStore } from '@/lib/store';
-import { 
-  getTypeColor, 
+import {
+  getTypeColor,
   formatPokemonName,
-  getEffectivenessLabel, 
+  getEffectivenessLabel,
 } from '@/lib/utils/pokemon';
 import EvolutionChain from '@/components/evolutionChain/EvolutionChain';
 import { DetailPokemon, TypeEffectiveness } from '@/lib/types';
@@ -97,13 +96,13 @@ useEffect(() => {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-6">
-        <Link
-          href="/"
+        <button
+          onClick={() => history.back()}
           className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Pokédex
-        </Link>
+        </button>
       </div>
       {/* card detail pokemon */}
       {<CardDetail

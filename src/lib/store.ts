@@ -139,6 +139,7 @@ export const usePokedexStore = create<PokedexState>()(
         sortBy: state.sortBy,
         sortOrder: state.sortOrder,
         pageSize: state.pageSize,
+        currentPage: state.currentPage,
       }),
     }
   )

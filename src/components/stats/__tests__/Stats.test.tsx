@@ -22,6 +22,6 @@ describe('Stats', () => {
     expect(screen.getByText('Special Attack')).toBeInTheDocument();
     expect(screen.getByText('Special Defense')).toBeInTheDocument();
     expect(screen.getByText('Speed')).toBeInTheDocument();
-    expect(screen.getByText('318')).toBeInTheDocument(); // Total stats
+    expect(screen.getByText('318')).toBeInTheDocument(); 
   });
 });

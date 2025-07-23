@@ -15,7 +15,6 @@ type Props = {
 };
 
 export default function EvolutionChain({ species, currentPokemonName }: Props) {
-  // Sort by species ID (evolution order)
   const sorted = [...species].sort((a, b) => a.id - b.id);
 
   return (
