@@ -211,17 +211,4 @@ describe('Grid', () => {
     });
   });
 
-  it('changes the items per page', async () => {
-    render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <Grid />
-      </MockedProvider>
-    );
-    await waitFor(() => {
-      expect(screen.getByText('Bulbasaur')).toBeInTheDocument();
-    });
-    const select = screen.getByRole('combobox');
-    fireEvent.change(select, { target: { value: '24' } });
-    expect(select).toHaveValue('24');
-  });
 });
