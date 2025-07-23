@@ -50,8 +50,6 @@ export function Grid() {
     viewMode,
   } = usePokedexStore();
 
-
-
   const whereClause = useMemo(() => {
     const conditions: whereClause = {};
     if (searchTerm) {
@@ -77,34 +75,31 @@ export function Grid() {
     return Object.keys(conditions).length > 0 ? conditions : undefined;
   }, [searchTerm, selectedTypes, selectedGeneration]);
 
+  const orderByClause = useMemo(() => {
 
-
-
-const orderByClause = useMemo(() => {
-
-  if ('base_stat'.includes(sortBy)) {
-    return {
-      pokemon_v2_pokemonstats_aggregate: {
-          sum: {
-            base_stat: sortOrder
+    if ('base_stat'.includes(sortBy)) {
+      return {
+        pokemon_v2_pokemonstats_aggregate: {
+            sum: {
+              base_stat: sortOrder
+            }
           }
-        }
+      };
+    }
+
+    const fieldMap: Record<string, string> = {
+      id: 'id',
+      name: 'name',
+      height: 'height',
+      weight: 'weight',
     };
-  }
 
-  const fieldMap: Record<string, string> = {
-    id: 'id',
-    name: 'name',
-    height: 'height',
-    weight: 'weight',
-  };
-
-  return [
-    {
-      [fieldMap[sortBy]]: sortOrder,
-    },
-  ];
-}, [sortBy, sortOrder]);
+    return [
+      {
+        [fieldMap[sortBy]]: sortOrder,
+      },
+    ];
+  }, [sortBy, sortOrder]);
 
 
   const { loading: loadingTotal } = useQuery(GET_POKEMON_COUNT, {
@@ -128,14 +123,6 @@ const orderByClause = useMemo(() => {
   const displayedPokemon = data?.pokemon_v2_pokemon || [];
   const totalPages = Math.ceil(totalCount / pageSize);
 
-  // useEffect(() => {
-  //   setCurrentPage(1);
-  // }, [searchTerm, selectedTypes, selectedGeneration, sortBy, sortOrder, setCurrentPage]);
-
-  // useEffect(() => {
-  //   setCurrentPage(1);
-  // }, [pageSize, setCurrentPage]);
-
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
@@ -144,7 +131,7 @@ const orderByClause = useMemo(() => {
 
     const getPageNumbers = () => {
     const pages = [];
-    const maxVisiblePages = 5;
+    const maxVisiblePages = 3;
     const startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
     const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
     
